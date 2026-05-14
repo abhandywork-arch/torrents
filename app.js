@@ -1,4 +1,5 @@
-const GOOGLE_SCRIPT_URL = "";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQfpZ_398-g63MZxbnQ9IN7RhXK-oMyA4FGcsfLvcyyL39NE0-XdN63haLgh029mJj7A/exec";
+const LEAD_API_KEY = "torrent-hs-lead-7f3a9c2e1b8d4a6f5e0c3b9d7a2f4e8";
 const CONTACT_EMAIL = "abhandywork@gmail.com";
 
 const form = document.querySelector("#quoteForm");
@@ -57,7 +58,7 @@ form.addEventListener("submit", async (event) => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
-      body: new URLSearchParams(payload)
+      body: new URLSearchParams({ ...payload, apiKey: LEAD_API_KEY })
     });
 
     setStatus("Thanks. Your request was sent. We will review the details and follow up shortly.");

@@ -1,14 +1,20 @@
+const LEAD_API_KEY = "torrent-hs-lead-7f3a9c2e1b8d4a6f5e0c3b9d7a2f4e8";
 const BUSINESS_EMAIL = "abhandywork@gmail.com";
 const SHEET_NAME = "Leads";
-const CALENDAR_ID = "primary";
-const SPREADSHEET_ID = "PASTE_CLIENT_SHEET_ID_HERE";
+const CALENDAR_ID = "9a029f0ab929389ab0490ba7148a901209fa556ffdbafc6d433f2baa00ed2410@group.calendar.google.com";
+const SPREADSHEET_ID = "1vxwI9JJG86RCKXKBVJgG2tMcbK5CjM8NQw-9G1MDMJQ";
 
 function doPost(e) {
+  if (!isValidLeadApiKey(e)) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: "unauthorized" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   const payload = normalizePayload(e);
-    const payload = normalizePayload(e);
-      const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-      const sheet = getOrCreateLeadSheet(spreadsheet);
-      const event = createCalendarEvent(payload);
+  const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = getOrCreateLeadSheet(spreadsheet);
+  const event = createCalendarEvent(payload);
 
   sheet.appendRow([
     new Date(),
@@ -29,6 +35,12 @@ function doPost(e) {
   return ContentService
     .createTextOutput(JSON.stringify({ ok: true }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function isValidLeadApiKey(e) {
+  const params = e && e.parameter ? e.parameter : {};
+  const key = params.apiKey ? String(params.apiKey).trim() : "";
+  return key === LEAD_API_KEY;
 }
 
 function normalizePayload(e) {
