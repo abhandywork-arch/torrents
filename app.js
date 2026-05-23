@@ -1,6 +1,6 @@
 import { CONTACT_EMAIL, buildMailto, formDataToObject } from "./form-utils.mjs";
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQfpZ_398-g63MZxbnQ9IN7RhXK-oMyA4FGcsfLvcyyL39NE0-XdN63haLgh029mJj7A/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyV_cEVbCPJFK1GAcYr2MR2olC4KnKGrP8VkNm0XfgzuhbGcz4no1bshELEcklifubihQ/exec";
 const LEAD_API_KEY = "torrent-hs-lead-7f3a9c2e1b8d4a6f5e0c3b9d7a2f4e8";
 
 const form = document.querySelector("#quoteForm");
