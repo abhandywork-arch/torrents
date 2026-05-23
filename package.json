@@ -1,0 +1,11 @@
+{
+  "name": "torrent-homeservice-ca",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs && html-validate index.html"
+  },
+  "devDependencies": {
+    "html-validate": "^9.7.0"
+  }
+}

@@ -1,6 +1,7 @@
+import { CONTACT_EMAIL, buildMailto, formDataToObject } from "./form-utils.mjs";
+
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQfpZ_398-g63MZxbnQ9IN7RhXK-oMyA4FGcsfLvcyyL39NE0-XdN63haLgh029mJj7A/exec";
 const LEAD_API_KEY = "torrent-hs-lead-7f3a9c2e1b8d4a6f5e0c3b9d7a2f4e8";
-const CONTACT_EMAIL = "abhandywork@gmail.com";
 
 const form = document.querySelector("#quoteForm");
 const statusBox = document.querySelector("#formStatus");
@@ -8,30 +9,6 @@ const statusBox = document.querySelector("#formStatus");
 function setStatus(message, type = "success") {
   statusBox.textContent = message;
   statusBox.className = `form-status visible ${type}`;
-}
-
-function formDataToObject(formData) {
-  return Object.fromEntries([...formData.entries()].map(([key, value]) => [key, String(value).trim()]));
-}
-
-function buildMailto(payload) {
-  const subject = encodeURIComponent(`New quote request: ${payload.service || "Home service"}`);
-  const body = encodeURIComponent(
-    [
-      `Name: ${payload.name}`,
-      `Email: ${payload.email}`,
-      `Phone: ${payload.phone}`,
-      `Address: ${payload.address}`,
-      `Service: ${payload.service}`,
-      `Preferred date: ${payload.preferredDate || "Not specified"}`,
-      `Preferred time: ${payload.preferredTime || "Not specified"}`,
-      "",
-      "Project details:",
-      payload.message
-    ].join("\n")
-  );
-
-  return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 form.addEventListener("submit", async (event) => {
