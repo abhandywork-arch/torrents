@@ -5,12 +5,27 @@ const LEAD_API_KEY = "torrent-hs-lead-7f3a9c2e1b8d4a6f5e0c3b9d7a2f4e8";
 
 const form = document.querySelector("#quoteForm");
 const statusBox = document.querySelector("#formStatus");
-
+// ── NEW: converts an image file to a base64 string ──
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 function setStatus(message, type = "success") {
   statusBox.textContent = message;
   statusBox.className = `form-status visible ${type}`;
 }
-
+  // ── NEW: encode uploaded image as base64 if present ──
+  const fileInput = document.getElementById('projectPhoto');
+  if (fileInput && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    payload.photoBase64 = await fileToBase64(file);
+    payload.photoName   = file.name;
+    payload.photoType   = file.type;
+  }
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
