@@ -5,7 +5,7 @@ const LEAD_API_KEY = "torrent-hs-lead-7f3a9c2e1b8d4a6f5e0c3b9d7a2f4e8";
 
 const form = document.querySelector("#quoteForm");
 const statusBox = document.querySelector("#formStatus");
-// ── NEW: converts an image file to a base64 string ──
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -14,18 +14,12 @@ function fileToBase64(file) {
     reader.readAsDataURL(file);
   });
 }
+
 function setStatus(message, type = "success") {
   statusBox.textContent = message;
   statusBox.className = `form-status visible ${type}`;
 }
-  // ── NEW: encode uploaded image as base64 if present ──
-  const fileInput = document.getElementById('projectPhoto');
-  if (fileInput && fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    payload.photoBase64 = await fileToBase64(file);
-    payload.photoName   = file.name;
-    payload.photoType   = file.type;
-  }
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -33,37 +27,46 @@ form.addEventListener("submit", async (event) => {
   const payload = formDataToObject(new FormData(form));
   payload.source = "torrent-homeservice.ca";
   payload.submittedAt = new Date().toISOString();
-const fileInput = document.getElementById('projectPhoto');
-const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-const maxSize = 5 * 1024 * 1024;
 
-if (fileInput && fileInput.files.length > 0) {
-  for (const file of fileInput.files) {
-    if (!allowedTypes.includes(file.type)) {
-      alert('Only JPG, PNG, WEBP, or GIF files are allowed.');
-      submitButton.disabled = false;
-      submitButton.textContent = "Send request";
-      return;
+  // ── Image validation + base64 encoding ──
+  const fileInput = document.getElementById('projectPhoto');
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  const maxSize = 5 * 1024 * 1024;
+
+  if (fileInput && fileInput.files.length > 0) {
+    for (const file of fileInput.files) {
+
+      // MIME type check
+      if (!allowedTypes.includes(file.type)) {
+        alert('Only JPG, PNG, WEBP, or GIF files are allowed.');
+        return;
+      }
+
+      // Size check
+      if (file.size > maxSize) {
+        alert(`${file.name} exceeds the 5MB limit.`);
+        return;
+      }
+
+      // Magic number check
+      const slice = file.slice(0, 4);
+      const buffer = await slice.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+      const validSignatures = ['ffd8ff', '89504e47', '52494646', '47494638'];
+      if (!validSignatures.some(sig => hex.startsWith(sig))) {
+        alert(`${file.name} does not appear to be a valid image file.`);
+        return;
+      }
     }
-    if (file.size > maxSize) {
-      alert(`${file.name} exceeds the 5MB limit.`);
-      submitButton.disabled = false;
-      submitButton.textContent = "Send request";
-      return;
-    }
-    const slice = file.slice(0, 4);
-    const buffer = await slice.arrayBuffer();
-    const bytes = new Uint8Array(buffer);
-    const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
-    const validSignatures = ['ffd8ff', '89504e47', '52494646', '47494638'];
-    if (!validSignatures.some(sig => hex.startsWith(sig))) {
-      alert(`${file.name} does not appear to be a valid image file.`);
-      submitButton.disabled = false;
-      submitButton.textContent = "Send request";
-      return;
-    }
+
+    // ── All checks passed — encode first image as base64 ──
+    const file = fileInput.files[0];
+    payload.photoBase64 = await fileToBase64(file);
+    payload.photoName   = file.name;
+    payload.photoType   = file.type;
   }
-}
+
   submitButton.disabled = true;
   submitButton.textContent = "Sending...";
 
