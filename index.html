@@ -303,23 +303,23 @@
           <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
           <label>
             Name
-            <input name="name" type="text" autocomplete="name" required placeholder="Your name">
+            <input name="name" type="text" autocomplete="name" placeholder="Your name">
           </label>
           <label>
             Email
-            <input name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+            <input name="email" type="email" autocomplete="email" placeholder="you@example.com">
           </label>
           <label>
             Phone
-            <input name="phone" type="tel" autocomplete="tel" required placeholder="(613) 555-0123">
+            <input name="phone" type="tel" autocomplete="tel" placeholder="(613) 555-0123">
           </label>
           <label>
             Project address
-            <input name="address" type="text" autocomplete="address-line1" required placeholder="Street, city">
+            <input name="address" type="text" autocomplete="address-line1" placeholder="Street, city">
           </label>
           <label>
             Service needed
-            <select name="service" required>
+            <select name="service">
               <option value="">Choose a service</option>
               <option>Fence installation or repair</option>
               <option>Deck, pergola, or gazebo</option>
@@ -343,9 +343,21 @@
           <label>
             Project details
             <textarea name="message" rows="5" required placeholder="Tell us what you need, rough size, timing, and any access notes."></textarea>
+            </label>
+            <label>
+            Project photos 
+            <input
+            type="file"
+             name="projectPhoto"
+             id="projectPhoto"
+             accept="image/jpeg,image/png,image/webp,image/gif"
+            multiple 
+            >
+           <span class="file-hint">JPG, PNG, WEBP only · Max 5MB per file</span>
           </label>
           <button class="button primary" type="submit">Send request</button>
           <p class="fine-print">Prefer email? Contact us at <a href="mailto:abhandywork@gmail.com">abhandywork@gmail.com</a>.</p>
+          
         </form>
       </section>
     </main>

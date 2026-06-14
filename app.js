@@ -18,7 +18,37 @@ form.addEventListener("submit", async (event) => {
   const payload = formDataToObject(new FormData(form));
   payload.source = "torrent-homeservice.ca";
   payload.submittedAt = new Date().toISOString();
+const fileInput = document.getElementById('projectPhoto');
+const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const maxSize = 5 * 1024 * 1024;
 
+if (fileInput && fileInput.files.length > 0) {
+  for (const file of fileInput.files) {
+    if (!allowedTypes.includes(file.type)) {
+      alert('Only JPG, PNG, WEBP, or GIF files are allowed.');
+      submitButton.disabled = false;
+      submitButton.textContent = "Send request";
+      return;
+    }
+    if (file.size > maxSize) {
+      alert(`${file.name} exceeds the 5MB limit.`);
+      submitButton.disabled = false;
+      submitButton.textContent = "Send request";
+      return;
+    }
+    const slice = file.slice(0, 4);
+    const buffer = await slice.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+    const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    const validSignatures = ['ffd8ff', '89504e47', '52494646', '47494638'];
+    if (!validSignatures.some(sig => hex.startsWith(sig))) {
+      alert(`${file.name} does not appear to be a valid image file.`);
+      submitButton.disabled = false;
+      submitButton.textContent = "Send request";
+      return;
+    }
+  }
+}
   submitButton.disabled = true;
   submitButton.textContent = "Sending...";
 
